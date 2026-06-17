@@ -31,4 +31,4 @@ export async function POST(req: NextRequest) {
 }
 
 // Stripe benötigt den Raw Body – kein JSON Parsing durch Next.js
-export const config = { api: { bodyParser: false } }
+export const dynamic = 'force-dynamic'
