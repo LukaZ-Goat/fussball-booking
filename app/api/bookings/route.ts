@@ -3,8 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { CONFIG } from '@/lib/types'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-04-10' })
-
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 // GET /api/bookings?date=2024-06-15
 export async function GET(req: NextRequest) {
   const date = req.nextUrl.searchParams.get('date')
