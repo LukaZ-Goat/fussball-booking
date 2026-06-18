@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { supabase } from '@/lib/supabase'
+import { sendNewBookingEmail } from '@/lib/emails'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
@@ -24,11 +25,20 @@ export async function POST(req: NextRequest) {
         .from('bookings')
         .update({ status: 'paid' })
         .eq('id', bookingId)
+
+      const { data: booking } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('id', bookingId)
+        .single()
+
+      if (booking) {
+        await sendNewBookingEmail(booking).catch(console.error)
+      }
     }
   }
 
   return NextResponse.json({ received: true })
 }
 
-// Stripe benötigt den Raw Body – kein JSON Parsing durch Next.js
 export const dynamic = 'force-dynamic'
